@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>add user</title>
+</head>
+<body>
+  <h2>유저 등록 페이지</h2>
+  <form name="test" method="post" action="adduser.php">
+  <input type="hidden" name="title" value="user information">
+  <table>
+    <tr>
+      <td align="left">*id: </td>
+      <td> <input type="text" size="15" maxlength="12" name="id"> </td>
+	</tr>
+	<tr>
+	  <td align="left">*password: </td>
+	  <td> <input type="password" size="15" maxlength="10" name="passwd"> </td>
+	</tr>
+	<tr>
+	  <td align="left">*check password: </td>
+	  <td> <input type="password" size="15" maxlength="10" name="repasswd"> </td>
+	</tr> 
+	<tr>
+	  <td align="left">*name: </td>
+	  <td> <input type="text" size="15" maxlength="12" name="name"> </td>
+	</tr>
+	<tr>
+	  <td align="left">*card No: </td>
+	  <td> <input type="text" size="15" maxlength="16" name="cardno"> </td>
+	</tr>
+  </table>
+  <br>
+  <table>
+	<tr> 
+	  <td align="center">
+		<input type="submit" value="submit">
+		<input type="reset" value="reset"></td>
+	</tr>
+  </table>
+  <ul>
+	<li>회원 가입이 안 된 경우 이 페이지로 돌아갑니다.</li>
+	<li>회원 가입이 성공적으로 된 경우 로그인 페이지로</li>
+  </ul>
+  </form>
+</body>
+</html>
+
