@@ -1,3 +1,3 @@
 ## Software application 2014 spring
 
-±èÅÂÈÆ
+Taehoon Kim
