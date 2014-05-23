@@ -12,9 +12,9 @@
   } 
    
   //이것을 이제 sql에 넣는다.
-  $mysqli=mysqli_connect("localhost", "ser", "0000", "swproject"); //sql database 연결
+  //$mysqli=mysqli_connect("localhost", "ser", "0000", "swproject"); //sql database 연결
   //localhost에 있는 ser명의 유저가 0000의 비밀번호로 swproject database에 접속
-  //$mysqli=mysqli_connect("54.178.195.175", "parkjun", "qqqq", "software_application_2014_1");
+  $mysqli=mysqli_connect("54.178.195.175", "parkjun", "qqqq", "software_application_2014_1");
 
   if(mysqli_connect_errno()) { //연결 실패
 	header("Location: adduser.html");
