@@ -5,7 +5,7 @@
 		$message='<p>DB connect error</p>';	
 		exit();
 	}
-	$message="<p><strong>search result</strong></p>";
+	//$message="<p><strong>search result</strong></p>";
 	
 	//mysql 연결 성공
 	$search=$_POST["word"];	
@@ -16,7 +16,7 @@
 	}
 	else {
 		//검색을 한 경우 검색어가 포함된 경우만 출력한다.
-			
+		$message="<p><strong>search result</strong></p>";		
 		$searchsql="SELECT cardno, id, name FROM member WHERE cardno LIKE '%".$search."%'";
 		$searchres=mysqli_query($mysqli, $searchsql) or die(mysqli_error($mysqli));
 		$numres=mysqli_num_rows($searchres);
