@@ -10,7 +10,7 @@
 	//mysql 연결 성공
 	$search=$_POST["word"];	
 	$check=$_POST["check"];
-	$message="<p>".$search."</p>";
+	//$message="<p>".$search."</p>";
 	if($check!=1) {
 		//처음에는 아무런 결과를 띄우지않는다.	
 	}
