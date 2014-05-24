@@ -1,10 +1,10 @@
 <?php
 	//$mysqli=mysqli_connect("localhost", "ser","0000","swproject");
-	$mysqli=mysqli_connect("54.178.197.175", "parkjun", "qqqq", "software_application_2014_1");	
+	$mysqli=mysqli_connect("54.178.195.175", "parkjun", "qqqq", "software_application_2014_1");	
 
 	if(mysqli_connect_errno()) { //mysql 연결 실패
 		$message='<p>DB connect error</p>';	
-		exit();
+		
 	}
 	$message="<p><strong>search result</strong></p>";
 	
