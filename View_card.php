@@ -16,13 +16,13 @@
 	}
 	else {
 		//검색을 한 경우 검색어가 포함된 경우만 출력한다.
-		$message="<p><strong>search result</strong></p>";		
+		$message="<p><strong>search result</strong></p>";	
 		$searchsql="SELECT cardno, id, name FROM member WHERE cardno LIKE '%".$search."%'";
 		$searchres=mysqli_query($mysqli, $searchsql) or die(mysqli_error($mysqli));
 		$numres=mysqli_num_rows($searchres);
 		if($numres==0) {
 			$message.="<p>There is no search result!</p>";
-	//		<script >alert("nosearch"); </script>
+			//<script >alert("nosearch"); </script>
 		}
 		else {
 			$message.="<table>";
