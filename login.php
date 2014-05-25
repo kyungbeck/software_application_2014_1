@@ -16,7 +16,7 @@
 
   if($count==1) {//login 성공
 	//echo "log-in by $id<br>";
-    check==strstr($id,"bus");
+    $buscheck==strstr($id,"bus");
 
 	session_start();
 	$_SESSION["id"]=$id;
