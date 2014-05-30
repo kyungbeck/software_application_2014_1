@@ -21,7 +21,7 @@
 	       try {
 
 				Connection con = null;
-				con = DriverManager.getConnection("jdbc:mysql://54.178.195.175 /software_application_2014_1",
+				con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1",
 						"parksoyoon", "qqqq");
 				java.sql.Statement st = null;
 				ResultSet rs = null;
