@@ -1,4 +1,7 @@
 all:
 	javac -encoding ms949 nowtest.java
-run:
+	javac calculate.java
+parksoyoon:
 	java nowtest
+kimtaehoon:
+	java calculate.java
