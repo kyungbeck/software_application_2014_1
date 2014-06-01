@@ -4,4 +4,4 @@ all:
 parksoyoon:
 	java nowtest
 kimtaehoon:
-	java calculate.java
+	java calculate
