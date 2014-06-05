@@ -307,7 +307,7 @@ public class calculate {
 
 			try {
 				Connection con = null;
-				con = DriverManager.getConnection("jdbc:mysql://localhost/software_application_2014_1", "sw_app_2014_1", "qqqq");
+				con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "kimtaehoon", "qqqq");
 				java.sql.Statement st = null;
 				st = con.createStatement();
 
@@ -332,7 +332,7 @@ public class calculate {
 		int basic_fee = 0;
 		try {
 			Connection con = null;
-			con = DriverManager.getConnection("jdbc:mysql://localhost/software_application_2014_1", "sw_app_2014_1", "qqqq");
+			con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "kimtaehoon", "qqqq");
 			java.sql.Statement st = null;
 			ResultSet rs = null;
 			st = con.createStatement();
@@ -356,14 +356,14 @@ public class calculate {
 		try {
 
 			Connection con = null;
-			con = DriverManager.getConnection("jdbc:mysql://localhost/software_application_2014_1", "sw_app_2014", "qqqq");
+			con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "kimtaehoon", "qqqq");
 			java.sql.Statement st = null;
 			ResultSet rs = null;
 			st = con.createStatement();
-			rs = st.executeQuery("SELECT NO,BUSSTOP,ACCUMULATE FROM BUS_" + busline + ";");
+			rs = st.executeQuery("SELECT NO,BUSSTOP,ACCUMULATE FROM bus_" + busline + ";");
 
 			//GET NO, BUSSTOP, ACCUMULATE DISTANCE COLUMNS OF TABLE BUS_5511 
-			if (st.execute("SELECT NO,BUSSTOP,ACCUMULATE FROM BUS_" + busline +";")) {
+			if (st.execute("SELECT NO,BUSSTOP,ACCUMULATE FROM bus_" + busline +";")) {
 				rs = st.getResultSet();
 			}
 
@@ -402,7 +402,7 @@ public class calculate {
 		try 
 		{
 			Connection con = null;
-			con = DriverManager.getConnection("jdbc:mysql://localhost/software_application_2014_1", "sw_app_2014_1", "qqqq");
+			con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "sw_app_2014_1", "qqqq");
 			java.sql.Statement st = null;
 			ResultSet rs = null;
 			st = con.createStatement();
