@@ -307,7 +307,7 @@ public class calculate {
 
 			try {
 				Connection con = null;
-				con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "qqqq");
+				con = DriverManager.getConnection("jdbc:mysql://localhost/software_application_2014_1", "sw_app_2014_1", "qqqq");
 				java.sql.Statement st = null;
 				st = con.createStatement();
 
@@ -332,7 +332,7 @@ public class calculate {
 		int basic_fee = 0;
 		try {
 			Connection con = null;
-			con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "qqqq");
+			con = DriverManager.getConnection("jdbc:mysql://localhost/software_application_2014_1", "sw_app_2014_1", "qqqq");
 			java.sql.Statement st = null;
 			ResultSet rs = null;
 			st = con.createStatement();
@@ -356,7 +356,7 @@ public class calculate {
 		try {
 
 			Connection con = null;
-			con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "qqqq");
+			con = DriverManager.getConnection("jdbc:mysql://localhost/software_application_2014_1", "sw_app_2014", "qqqq");
 			java.sql.Statement st = null;
 			ResultSet rs = null;
 			st = con.createStatement();
@@ -402,7 +402,7 @@ public class calculate {
 		try 
 		{
 			Connection con = null;
-			con = DriverManager.getConnection("jdbc:mysql://localhost/library", "root", "qqqq");
+			con = DriverManager.getConnection("jdbc:mysql://localhost/software_application_2014_1", "sw_app_2014_1", "qqqq");
 			java.sql.Statement st = null;
 			ResultSet rs = null;
 			st = con.createStatement();

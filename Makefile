@@ -5,3 +5,5 @@ parksoyoon:
 	java nowtest
 kimtaehoon:
 	java calculate
+clean:
+	rm -rf *.class
