@@ -186,7 +186,7 @@ public class calculate {
 								fee = 0;
 							else
 							{
-								int fee_by_dist = ((((int)t.total_dist - 12) / 5) + 1) * 100 + t.max_basic_fee;
+								int fee_by_dist = ((((int)(t.total_dist/1000) - 12) / 5) + 1) * 100 + t.max_basic_fee;
 								if (fee_by_dist > t.sum_basic_fee)
 									fee = t.sum_basic_fee - t.total_fee;
 								else
