@@ -116,9 +116,10 @@ public class calculate {
 							int fee;
 							int basic_fee = GET_basic_fee(busline, personType);
 							fee = basic_fee;
-
+							
 							if (changeFee != fee)
 								System.out.println("INCORRECT");
+								
 							else System.out.println("CORRECT");
 
 							transactionHeadNode tempH = new transactionHeadNode(cardID, isPrepay, 0, personType, personNum);
@@ -181,7 +182,7 @@ public class calculate {
 							int fee;
 							double dist = GET_distance(busline, t.unitNode.onBusstop, busstop);
 							t.total_dist += dist;
-
+							
 							if (t.transCount == 0) // 처음에 하차할 경우
 								fee = 0;
 							else
@@ -192,7 +193,7 @@ public class calculate {
 								else
 									fee = fee_by_dist - t.total_fee;
 							}
-
+							
 							t.total_fee += fee;
 
 							if (changeFee != fee)
@@ -317,7 +318,7 @@ public class calculate {
 					calculated = fee_by_busline.get(bus);
 					System.out.print(bus + ": ");
 					System.out.println(calculated + "원");
-					st.execute("UPDATE company_calcul SET calculated = calculated + " + calculated + " WHERE company = (SELECT company FROM busline_company WHERE busline = '" + bus + "');");
+					st.execute("UPDATE company_calcul SET calculated = calculated + " + calculated + " WHERE company = (SELECT company FROM busline_info WHERE busline = '" + bus + "');");
 				}
 				System.out.println("inserting into 'company_calcul' finished");
 			} catch (SQLException e) {
@@ -337,7 +338,7 @@ public class calculate {
 			ResultSet rs = null;
 			st = con.createStatement();
 
-			st.execute("SELECT fee FROM fee_table NATURAL JOIN busline_bustype where busline = '" + busline + "' and persontype =" + personType + ";");
+			st.execute("SELECT fee FROM fee_table NATURAL JOIN busline_info where busline = '" + busline + "' and persontype =" + personType + ";");
 			rs = st.getResultSet();
 			while (rs.next())
 				basic_fee = rs.getInt(1);
@@ -362,7 +363,7 @@ public class calculate {
 			st = con.createStatement();
 			rs = st.executeQuery("SELECT NO,BUSSTOP,ACCUMULATE FROM bus_" + busline + ";");
 
-			//GET NO, BUSSTOP, ACCUMULATE DISTANCE COLUMNS OF TABLE BUS_5511 
+			//GET NO, BUSSTOP, ACCUMULATE DISTANCE COLUMNS OF TABLE bus_5511 
 			if (st.execute("SELECT NO,BUSSTOP,ACCUMULATE FROM bus_" + busline +";")) {
 				rs = st.getResultSet();
 			}
@@ -402,7 +403,7 @@ public class calculate {
 		try 
 		{
 			Connection con = null;
-			con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "sw_app_2014_1", "qqqq");
+			con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "kimtaehoon", "qqqq");
 			java.sql.Statement st = null;
 			ResultSet rs = null;
 			st = con.createStatement();
