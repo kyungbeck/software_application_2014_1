@@ -6,7 +6,7 @@
 		exit();
 	}
 	
-	$message="<h2><p><strong>회원 정보</strong></p></h2>";
+	$message="<h2><p><strong>회원 정보 조회 및 변경</strong></p></h2>";
 	//mysql 연결 성공
 	$check=$_POST["check"];
 	//$message="<p>".$search."</p>";
@@ -67,6 +67,7 @@
 ?>
 <html>
 	<head>
+		<link type="text/css" rel="stylesheet" href="style.css">
 		<title>
 			
 		</title>
@@ -85,10 +86,15 @@
 				<h5><?php echo $message2; ?></h5>	
 				<input type="hidden" name="myname" value="<?php echo $name; ?>"/>
 				<input type="hidden" name="check" value=1 />
-				<input type="submit" value="변경사항 저장"/>
+				<input class="button" type="submit" value="변경사항 저장"/>
 			</p>
 		</form>
-
+		<ul>
+			<li>
+			<em>카드번호 변경시 이미 다른 사용자가 사용하고 있는 번호인 경우, 변경할 수 없습니다.</em>
+			</li>
+			
+		</ul>
 		
 	</body>
 </html>

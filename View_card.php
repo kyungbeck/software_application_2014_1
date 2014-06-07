@@ -5,25 +5,25 @@
 		$message='<p>DB connect error</p>';	
 		exit();
 	}
-	//$message="<p><strong>search result</strong></p>";
+	$message="<p><strong>search result</strong></p>";
 	
 	//mysql 연결 성공
 	$search=$_POST["word"];	
 	$check=$_POST["check"];
-	//$message="<p>".$search."</p>";
+	$message="<p>".$search."</p>";
 	if($check!=1) {
 		//처음에는 아무런 결과를 띄우지않는다.	
 	}
 	else {
 		//검색을 한 경우 검색어가 포함된 경우만 출력한다.
-		$message="<p><strong>search result</strong></p>";	
+			
 		$searchsql="SELECT cardno, id, name FROM member WHERE cardno LIKE '%".$search."%'";
 		$searchres=mysqli_query($mysqli, $searchsql) or die(mysqli_error($mysqli));
 		$numres=mysqli_num_rows($searchres);
 		if($numres==0) {
 			$message.="<p>There is no search result!</p>";
-			//<script >alert("nosearch"); </script>
-		}
+	?>		<script >alert("nosearch"); </script>
+	<?	}
 		else {
 			$message.="<table>";
 			$message.="<tr><td>*card No</td><td>*id</td><td>*name</td></tr>";
@@ -45,14 +45,16 @@
 		<title>
 			
 		</title>
+		<link type="text/css" rel="stylesheet" href="style.css">
 	</head>
 	<body>
+		카드 목록 조회<hr>
 		<form name="search11" action="View_card.php" method="POST">
 			<p>
 				<strong>Search Card Number</strong>
 				<input type="text" name="word" value="<?php echo $search; ?>"/>
 				<input type="hidden" name="check" value=1/>
-				<input type="submit" value="SEARCH!"/>
+				<input class="button" type="submit" value="SEARCH!"/>
 			</p>
 		</form>
 

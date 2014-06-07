@@ -110,26 +110,43 @@
 ?>
 <html>
 	<head>
-		
+		<link type="text/css" rel="stylesheet" href="style.css">	
 		<title>
 			
 		</title>
 	</head>
 	<body>
+		승하차 내역 조회 <hr>
 		<form name="search11" action="View_user.php" method="POST">
 			<p>
-				<strong>Time From</strong> 
-				<input type="text" name="frdt" value="<?php echo $frdt; ?>"/>
-				<strong> To</strong>
-				<input type="text" name="todt" value="<?php echo $todt; ?>"/> <br>
-				<strong>Bus Line</strong>
-				<input type="text" name="busno" value="<?php echo $Sbusno; ?>"/>
-				<strong>Bus Stop</strong>
-				<input type="text" name="busstop" value="<?php echo $Sbusstop; ?>"/><br>
-				
-				
-				<input type="hidden" name="check" value=1/>
-				<input type="submit" value="SEARCH!"/>
+				<table>
+					<tr>
+						<td>
+							<strong>Time From</strong> 
+							<input type="text" name="frdt" value="<?php echo $frdt; ?>"/>
+						</td>
+						<td>
+							<strong>Time To</strong>
+							<input type="text" name="todt" value="<?php echo $todt; ?>"/> 
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<strong>Bus Line</strong>
+							<input type="text" name="busno" value="<?php echo $Sbusno; ?>"/>
+						</td>
+						<td>
+							<strong>Bus Stop</strong>
+							<input type="text" name="busstop" value="<?php echo $Sbusstop; ?>"/>
+						</td>
+					</tr>
+					<tr> 
+						<td><input type="hidden" name="check" value=1/></td>
+						<td align="right">
+							<input class="button" type="submit" value="SEARCH!"/>
+						</td>
+					</tr>
+				</table>
 			</p>
 		</form>
 

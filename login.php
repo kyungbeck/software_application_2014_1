@@ -1,8 +1,14 @@
 <?php
   $id=$_POST[id];
   $passwd=$_POST[passwd];
+  if($_POST["logout"]) {
+	unset($_SESSION["id"]);
+	unset($_SESSION["cardno"]);
+	header("Location: login.html");
+	exit();
+  }
 
- // $mysqli=mysqli_connect("localhost", "ser", "0000", "swproject");
+  //$mysqli=mysqli_connect("localhost", "ser", "0000", "swproject");
   $mysqli=mysqli_connect("54.178.195.175", "parkjun", "qqqq", "software_application_2014_1");
   if(mysqli_connect_errno()) {
 	  exit();
@@ -24,9 +30,9 @@
 	$_SESSION["cardno"]=stripslashes($userinfo['cardno']);
 	//header("Location: allView.html");
 	mysqli_close($mysqli);
-
+	header("Location: tab.php");
 	//관리자 계정
-	if($id=="admin") {
+	//if($id=="admin") {
 	  //$_SESSION["id"]=$id;
 	  /*$to="admin";
 	  echo("
@@ -36,9 +42,9 @@
 	  echo($to);
 	  echo("'> </form></body>");*/
 	  //$_SESSION["id"]=$id;
-	  header("Location: tab_admin.php");
+	  //header("Location: tab_admin.php");
 	  exit();
-	}
+	//}
 	//bus사업자 계정
 	//if($buscheck!==false) {
 	  /*echo("
@@ -57,7 +63,7 @@
 			  <input name=id type=hidden value='");
 	  echo($id);
 	  echo("'> </form></body>");*/
-	  header("Location: tab_user.php");
+	  //header("Location: tab_user.php");
 	  //exit();
 	//}
 	
