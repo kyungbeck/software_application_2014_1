@@ -35,7 +35,7 @@
 		<table width=1200px height=50px  >
 			<?php echo $message; ?>
 			<td align="right">
-				<form  name="search22" action="tab_admin.php" method="POST">
+				<form  name="search22" action="tab.php" method="POST">
 					<input class="button" name="logout" type="submit" value="LOGOUT" />
 				</form>
 			</td>
