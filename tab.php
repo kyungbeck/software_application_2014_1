@@ -17,15 +17,15 @@
 ?>
 <html>
 	<head>
-		<title> Welcome, <? echo $id ?>!</title> 
+		<title> Welcome, <?php echo $id ?>!</title> 
 		<meta charset=UTF-8>
 		<link rel="stylesheet" type="text/css" href="style.css"/>
 	</head>
 	<body>
 		<div id="container">
-			<div id="header"><?	include "title.php"; ?></div>
+			<div id="header"><?php	include "title.php"; ?></div>
 			<div id="sidemenu">
-				<? 
+				<?php 
 					if($id=="admin") include "menu_admin.html";
 					else include "menu_user.html";
 				?>
