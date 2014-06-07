@@ -2,23 +2,19 @@
 	session_start();
 	$id=$_SESSION["id"];
 	$cardno=$_SESSION["cardno"];
+	$message="";
 	if($id=="admin") {
-		echo "<html> <body>	 <table>
+		$message.="
 				<tr>
-					<td><h3>connecting with ".$id." authority</h3> </td>
+					<td ><h3 id='status'>connecting with ".$id." authority</h3> </td>
 					<td width='200'></td>
-					<td><h5>GANG TEAM</h5></td>
-				</tr>
-			</table> ";
+					<td><h5>GANG TEAM</h5></td>";
 	}
 	else { 
-		echo "<html> <body>  <table>
-		           <tr>
-		           <td><h3>connecting with id: ".$id." and card No.: ".$cardno." </h3> </td>
+		$message.="<tr>
+					<td><h3 id='status'>connecting with id: ".$id." and card No.: ".$cardno." </h3> </td>
 		         <td width='200'></td>
-		                 <td><h5>GANG TEAM</h5></td>
-		           </tr>
-		         </table> ";
+		                 <td><h5>GANG TEAM</h5></td>";
 	}
 /*	echo "<body>
 			<table>
@@ -29,5 +25,22 @@
 			</table>";
 */			
 
-	echo "</body> </html>";
+	
 ?>
+<html>
+	<head>
+	<link rel="stylesheet" type="text/css" href="style.css"/>
+	</head>
+	<body>
+		<table width=1200px height=50px  >
+			<?php echo $message; ?>
+			<td align="right">
+				<form  name="search22" action="tab_admin.php" method="POST">
+					<input class="button" name="logout" type="submit" value="LOGOUT" />
+				</form>
+			</td>
+			<td width=10px></td>
+			</tr>
+		</table>
+	</body>
+</html>
