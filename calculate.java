@@ -1,7 +1,5 @@
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 
 public class calculate {
 	public static class transactionHeadNode
@@ -254,70 +252,58 @@ public class calculate {
 		public void Cal()
 		{
 			transactionHeadNode t = this.head;
-			HashMap<String, Integer> fee_by_busline = new HashMap<String, Integer>();
 
-			while (true)
+			try
 			{
-				transactionHeadNode tempT = t;
-				t = t.nextCard;
-				if (t == null)
-					break;
-
-				Timestamp pivotTime = new Timestamp(0);
-				long p = System.currentTimeMillis() - (1000 * 60 * 20);
-				pivotTime.setTime(p);
-				if (t.isExpired == true || t.unitNode.offTaggingDateTime.before(pivotTime))
-				{	// 만료된 거래노드 정산
-					int sum_basic_fee = t.sum_basic_fee;
-					int total_fee = t.total_fee;
-					int sum = 0;
-					transactionUnitNode u = t.unitNode;
-					while (true)
-					{
-						if (u == null)
-							break;
-
-						String bus = u.busline;
-						int feeval;
-						if (u.nextBoard == null)
-							feeval = total_fee - sum;
-						else
-						{
-							feeval = Math.round((float)(u.basicFee * total_fee) / sum_basic_fee);
-							sum += feeval;
-						}
-
-						if (fee_by_busline.containsKey(bus))
-							feeval += fee_by_busline.remove(bus);
-						fee_by_busline.put(bus, feeval);
-
-						u = u.nextBoard;
-					}
-					tempT.nextCard = tempT.nextCard.nextCard;
-					t = tempT;
-				}
-			}
-
-			String bus;
-			int calculated;
-			Iterator<String> it = fee_by_busline.keySet().iterator();
-			System.out.println();
-			//		System.out.println("<정산>");
-
-			try {
 				Connection con = null;
 				con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "kimtaehoon", "qqqq");
 				java.sql.Statement st = null;
 				st = con.createStatement();
 
-				while (it.hasNext())
+				while (true)
 				{
-					bus = it.next();
-					calculated = fee_by_busline.get(bus);
-					System.out.print(bus + ": ");
-					System.out.println(calculated + "원");
-					st.execute("UPDATE company_calcul SET calculated = calculated + " + calculated + " WHERE company = (SELECT company FROM busline_info WHERE busline = '" + bus + "');");
+					transactionHeadNode tempT = t;
+					t = t.nextCard;
+					if (t == null)
+						break;
+
+					Timestamp pivotTime = new Timestamp(0);
+					long p = System.currentTimeMillis() - (1000 * 60 * 20);
+					pivotTime.setTime(p);
+					if (t.isExpired == true || t.unitNode.offTaggingDateTime.before(pivotTime))
+					{	// 만료된 거래노드 정산
+						int sum_basic_fee = t.sum_basic_fee;
+						int total_fee = t.total_fee;
+						int sum = 0;
+						transactionUnitNode u = t.unitNode;
+						
+						System.out.println();
+						while (true)
+						{
+							if (u == null)
+								break;
+
+							String bus = u.busline;
+							int feeval;
+							if (u.nextBoard == null)
+								feeval = total_fee - sum;
+							else
+							{
+								feeval = Math.round((float)(u.basicFee * total_fee) / sum_basic_fee);
+								sum += feeval;
+							}
+
+							System.out.print(bus + ": ");
+							System.out.println(feeval + "원");
+							st.execute("INSERT INTO company_calcul (company, busline, calculated) values ((SELECT company FROM busline_info WHERE busline = '" + bus + "'), '" + bus + "', " + feeval + ");");
+
+							u = u.nextBoard;
+						}
+						tempT.nextCard = tempT.nextCard.nextCard;
+						t = tempT;
+					}
 				}
+				
 				System.out.println("inserting into 'company_calcul' finished");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -465,7 +451,8 @@ public class calculate {
 				st.execute(query);
 			}
 			System.out.println("inserting into 'transactional_information' finished");
-
+			System.out.println("---------------------------------------------------");
+			
 			tSet.Cal();
 
 		} catch (SQLException sqex) {
