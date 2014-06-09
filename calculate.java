@@ -84,12 +84,12 @@ public class calculate {
 				{	// 1. 일반 승차 태그 (환승x)
 					System.out.print("(" + cardID + ") 처음 승차 태그: ");
 					int fee;
-					int basic_fee = GET_basic_fee(busline, personType);
+					int basic_fee = GET_basic_fee(busline, personType) * personNum;
 					fee = basic_fee;
 
 					if (changeFee != fee)
-						System.out.println("INCORRECT");
-					else System.out.println("CORRECT");
+						System.out.println("X");
+					else System.out.println("O");
 
 					transactionHeadNode tempH = new transactionHeadNode(cardID, isPrepay, 0, personType, personNum);
 					transactionUnitNode tempU = new transactionUnitNode(changeFee, taggingDateTime, busstop, busline, 0);
@@ -114,13 +114,12 @@ public class calculate {
 
 							System.out.print("(" + cardID + ") 처음 승차 태그: ");
 							int fee;
-							int basic_fee = GET_basic_fee(busline, personType);
+							int basic_fee = GET_basic_fee(busline, personType) * personNum;
 							fee = basic_fee;
-							
+
 							if (changeFee != fee)
-								System.out.println("INCORRECT");
-								
-							else System.out.println("CORRECT");
+								System.out.println("X");
+							else System.out.println("O");
 
 							transactionHeadNode tempH = new transactionHeadNode(cardID, isPrepay, 0, personType, personNum);
 							transactionUnitNode tempU = new transactionUnitNode(changeFee, taggingDateTime, busstop, busline, 0);
@@ -141,7 +140,7 @@ public class calculate {
 							System.out.print("(" + cardID + ") 환승 승차 태그: ");
 							t = t.nextCard;
 							int fee;
-							int basic_fee = GET_basic_fee(busline, personType);
+							int basic_fee = GET_basic_fee(busline, personType) * personNum;
 							int i = basic_fee - t.max_basic_fee;
 							if (i > 0)
 							{
@@ -151,8 +150,8 @@ public class calculate {
 							else fee = 0;
 
 							if (changeFee != fee)
-								System.out.println("INCORRECT");
-							else System.out.println("CORRECT");
+								System.out.println("X");
+							else System.out.println("O");
 
 							t.sum_basic_fee += basic_fee;
 							t.total_fee += fee;
@@ -182,23 +181,23 @@ public class calculate {
 							int fee;
 							double dist = GET_distance(busline, t.unitNode.onBusstop, busstop);
 							t.total_dist += dist;
-							
+
 							if (t.transCount == 0) // 처음에 하차할 경우
 								fee = 0;
 							else
 							{
-								int fee_by_dist = ((((int)(t.total_dist/1000) - 12) / 5) + 1) * 100 + t.max_basic_fee;
+								int fee_by_dist = ((((int)(t.total_dist/1000) - 12) / 5) + 1) * 100 * personNum + t.max_basic_fee;
 								if (fee_by_dist > t.sum_basic_fee)
 									fee = t.sum_basic_fee - t.total_fee;
 								else
 									fee = fee_by_dist - t.total_fee;
 							}
-							
+
 							t.total_fee += fee;
 
 							if (changeFee != fee)
-								System.out.println("INCORRECT");
-							else System.out.println("CORRECT");
+								System.out.println("X");
+							else System.out.println("O");
 
 							t.unitNode.offTaggingDateTime = taggingDateTime;
 							t.unitNode.offBusstop = busstop;
@@ -213,12 +212,12 @@ public class calculate {
 							// 새 승차정보노드 추가
 							int additional_fee = t.nextCard.unitNode.basicFee - t.nextCard.unitNode.changeFee;
 							int fee;
-							int basic_fee = GET_basic_fee(busline, personType);
+							int basic_fee = GET_basic_fee(busline, personType) * personNum;
 							fee = basic_fee + additional_fee;
 
 							if (changeFee != fee)
-								System.out.println("INCORRECT");
-							else System.out.println("CORRECT");
+								System.out.println("X");
+							else System.out.println("O");
 
 							transactionHeadNode tempH = new transactionHeadNode(cardID, isPrepay, 0, personType, personNum);
 							transactionUnitNode tempU = new transactionUnitNode(changeFee, taggingDateTime, busstop, busline, 0);
@@ -234,7 +233,6 @@ public class calculate {
 
 							// 기존 승차정보노드 갱신
 							t = t.nextCard.nextCard;
-							//				t.isAddFeeNode = true; (왜있는지 의문)
 							t.isExpired = true;
 							t.unitNode.offTaggingDateTime = t.unitNode.onTaggingDateTime;
 							t.total_fee += additional_fee;
@@ -304,7 +302,7 @@ public class calculate {
 			int calculated;
 			Iterator<String> it = fee_by_busline.keySet().iterator();
 			System.out.println();
-	//		System.out.println("<정산>");
+			//		System.out.println("<정산>");
 
 			try {
 				Connection con = null;
@@ -420,8 +418,8 @@ public class calculate {
 			String busstop;
 			String busline;
 			int transCount;
-			
-	//		System.out.println("<정산 재작업(?)>");
+
+			//		System.out.println("<정산 재작업(?)>");
 			while (rs.next()) {
 				cardID = rs.getString(2);
 				if (rs.getInt(3) == 1)
