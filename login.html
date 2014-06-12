@@ -3,10 +3,27 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>login page</title>
+
+	<script>
+	function validateForm() {
+		var x = document.forms["test"]["id"].value;
+		if (x==null || x=="") {
+			alert("First id must be filled out");
+			return false;
+		}
+
+		var y = document.forms["test"]["passwd"].value;
+		if (y==null || y=="") {
+			alert("Second password must be filled out");
+			return false;
+		}
+	}
+	</script>
+
 </head>
 <body>
   <h2> Login Page </h2>
-  <form name="test" method="post" action="login.php">
+  <form name="test" method="post" action="login.php" onsubmit="return validateForm()">
   <input type="hidden" name="title" value="user information">
   <table>
     <tr>
