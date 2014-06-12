@@ -12,7 +12,7 @@
 	$check=$_POST["check"];
 	$frdt=$_POST["frdt"];
 	$todt=$_POST["todt"];
-
+	$com=$_POST["com"];
 	//$message="<p>".$search."</p>";
 	if($check!=1) {
 		//처음에는 아무런 결과를 띄우지않는다.	
@@ -20,22 +20,58 @@
 	else {
 		//검색을 한 경우 검색어가 포함된 경우만 출력한다.
 		$message="<p><strong>search result</strong></p>";			
-		$searchsql="SELECT B.company, SUM(changemoney) FROM transactional_information as A, busline_info as B WHERE A.busline = B.busline AND B.company LIKE '%".$search."%'";
+		//$searchsql="SELECT B.company, SUM(changemoney) FROM transactional_information as A, busline_info as B WHERE A.busline = B.busline AND B.company LIKE '%".$search."%'";
+		//
+		$searchsql2="SELECT company, sum(calculated) FROM company_calcul WHERE busline LIKE '%".$search."%' AND company LIKE '%".$com."%'";
+        if($frdt && $todt) {
+			if($frdt>$todt) {
+				echo $message="time error";
+				exit();
+			}
+		    $searchsql2.=" AND (offtagtime BETWEEN '".$frdt."' AND '".$todt."')";
+		}
+	    else if($frdt) {
+			$searchsql2.=" AND offtagtime>='".$frdt."'";
+	    }
+	    else if($todt) {
+	        $searhsql2.=" AND offtagtime<='".$todt."'";
+		}
+		$searchsql2.=" GROUP BY company";
+		$searchres2=mysqli_query($mysqli, $searchsql2) or die(mysqli_error($mysqli));
+		$numres2=mysqli_num_rows($searchres2);
+		if($numres2==0) {
+			$message.="<p>There is no search result!</p>";
+		}
+		else {
+		    $message.="<table>";
+		    $message.="<tr><td>*COMPANY</td><td>*총 수입금</td></tr>";
+			while($cardinfo2=mysqli_fetch_array($searchres2)) {
+				$company=stripslashes($cardinfo2["company"]);
+				$money=stripslashes($cardinfo2['sum(calculated)']);
+				$message.="<tr align=right><td>".$company."</td><td>".$money."</td></tr>";
+			}
+			$message.="</table><hr>";
+		}
+
+
+
+		$searchsql="SELECT company, busline, calculated, time FROM company_calcul WHERE busline LIKE '%".$search."%' AND company LIKE '%".$com."%'";
+
 		if($frdt && $todt) {
 			if($frdt>$todt) {
 				echo $message="time error";
 				exit();
 			}
-			$searchsql.=" AND (ridetagtime BETWEEN '".$frdt."' AND '".$todt."' OR offtagtime BETWEEN '".$frdt."' AND '".$todt."')";
+			$searchsql.=" AND (offtagtime BETWEEN '".$frdt."' AND '".$todt."')";
 		}
 		else if($frdt) {
 			$searchsql.=" AND offtagtime>='".$frdt."'";
 		}
 		else if($todt) {
-			$searhsql.=" AND ridetagtime<='".$todt."'";
+			$searhsql.=" AND offtagtime<='".$todt."'";
 		}
 
-		$searchsql.=" GROUP BY B.company";
+		//$searchsql.=" GROUP BY B.company";
 		$searchres=mysqli_query($mysqli, $searchsql) or die(mysqli_error($mysqli));
 		$numres=mysqli_num_rows($searchres);
 		if($numres==0) {
@@ -43,12 +79,14 @@
 		}
 		else {
 			$message.="<table>";
-			$message.="<tr><td>*COMPANY</td><td>*수입금</td></tr>";
+			$message.="<tr><td>*COMPANY</td><td>*수입금</td><td>*버스노선</td><td>*시간</td></tr>";
 			while($cardinfo=mysqli_fetch_array($searchres)) {
 				$company=stripslashes($cardinfo["company"]);
-				$sum=stripslashes($cardinfo['SUM(changemoney)']);
+				$money=stripslashes($cardinfo['calculated']);
+				$busline=stripslashes($cardinfo['busline']);
+				$time=stripslashes($cardinfo['time']);
 				
-				$message.="<tr align=right><td>".$company."</td><td>".$sum."</td></tr>";
+				$message.="<tr align=right><td>".$company."</td><td>".$money."</td><td>".$busline."</td><td>".$time."</td></tr>";
 			}
 			$message.="</table>";
 			mysqli_free_result($searchres);
@@ -81,9 +119,16 @@
 					</tr>
 					<tr>
 						<td>
+							<strong>Bus Company</strong>
+							<input type="text" name="com" value="<?php echo $com; ?>"/>
+						</td>
+						<td>
 							<strong>Busline Number</strong>
 							<input type="text" name="word" value="<?php echo $search; ?>"/>
 						</td>
+					</tr>
+					<tr>
+						<td></td>
 						<td align="right">
 							<input type="hidden" name="check" value=1/>
 							<input class="button" type="submit" value="SEARCH!"/>
