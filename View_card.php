@@ -17,21 +17,30 @@
 	else {
 		//검색을 한 경우 검색어가 포함된 경우만 출력한다.
 			
-		$searchsql="SELECT cardno, id, name FROM member WHERE cardno LIKE '%".$search."%'";
+		$searchsql="SELECT cardno, id, name ,money, cardtype FROM member WHERE cardno LIKE '%".$search."%'";
 		$searchres=mysqli_query($mysqli, $searchsql) or die(mysqli_error($mysqli));
 		$numres=mysqli_num_rows($searchres);
 		if($numres==0) {
 			$message.="<p>There is no search result!</p>";
 	?>		<script >alert("nosearch"); </script>
-	<?php	}
+	<?	}
 		else {
 			$message.="<table>";
-			$message.="<tr><td>*card No</td><td>*id</td><td>*name</td></tr>";
+			$message.="<tr><td>*card No</td><td>*id</td><td>*name</td><td>잔액or월 사용금액</td></tr>";
 			while($cardinfo=mysqli_fetch_array($searchres)) {
 				$cardno=stripslashes($cardinfo['cardno']);
 				$id=stripslashes($cardinfo['id']);
 				$name=stripslashes($cardinfo['name']);
-				$message.="<tr><td>".$cardno."</td><td>".$id."</td><td>".$name."</td></tr>";
+				$money=stripslashes($cardinfo['money']);
+				$cardtype=stripslashes($cardinfo['cardtype']);
+				if($cardtype==1) {
+					$ct="잔";
+				}
+				else if($cardtype==2) {
+					$ct="월";
+				}
+				if($id!="admin" && $cardno!="bus" && $cardno!="city")
+					$message.="<tr align='right'><td>".$cardno."</td><td>".$id."</td><td>".$name."</td><td>".$ct.":".$money."</td></tr>";
 			}
 			$message.="</table>";
 			mysqli_free_result($searchres);
