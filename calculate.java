@@ -514,6 +514,24 @@ public class calculate {
 	{	
 		while (true)
 		{	
+			BufferedReader brin = new BufferedReader(new InputStreamReader(System.in));
+			while (true)
+			{
+				try
+				{
+					String input = brin.readLine();
+					if (input.compareTo("") == 0)
+						break;
+					else if (input.compareTo("quit") == 0)
+						return;
+				}
+				catch (IOException e)
+				{
+					System.out.println("입력이 잘못되었습니다. 오류 : " + e.toString());
+				}
+			}
+			
+			
 			//	long fiveMinBefore = System.currentTimeMillis() + (1000 * 60 * 5);
 			try 
 			{
@@ -604,7 +622,7 @@ public class calculate {
 				System.out.println("SQLState: " + sqex.getSQLState());
 			}
 
-			BufferedReader brin = new BufferedReader(new InputStreamReader(System.in));
+		/*	BufferedReader brin = new BufferedReader(new InputStreamReader(System.in));
 			while (true)
 			{
 				try
@@ -619,7 +637,7 @@ public class calculate {
 				{
 					System.out.println("입력이 잘못되었습니다. 오류 : " + e.toString());
 				}
-			}
+			}*/
 		}
 	}
 }
