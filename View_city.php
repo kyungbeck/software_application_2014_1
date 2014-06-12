@@ -39,17 +39,17 @@
 			}
 			//사이
 			//echo $message="1";
-			$searchsql.=" AND (offtagtime BETWEEN '".$frdt2."' AND '".$todt2."')";
+			$searchsql.=" AND (tagtime BETWEEN '".$frdt2."' AND '".$todt2."')";
 		}
 		else if($frdt) {
 			//이시간이후 탑승기록에 대해 모두 검색
 			//echo $message="2";
-			$searchsql.=" AND offtagtime>='".$frdt2."'";
+			$searchsql.=" AND tagtime>='".$frdt2."'";
 		}
 		else if($todt) {
 			//이시간이전 탑승기록에 대해 모두 검색
 			//echo $message="3";
-			$searchsql.=" AND offtagtime<='".$todt2."'";
+			$searchsql.=" AND tagtime<='".$todt2."'";
 		}
 	
 		$searchsql.=" GROUP BY company";
