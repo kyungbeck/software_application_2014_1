@@ -22,7 +22,8 @@
 		$numres=mysqli_num_rows($searchres);
 		if($numres==0) {
 			$message.="<p>There is no search result!</p>";
-		}
+	?>		<script >alert("nosearch"); </script>
+	<?	}
 		else {
 			$message.="<table>";
 			$message.="<tr><td>*card No</td><td>*id</td><td>*name</td></tr>";

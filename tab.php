@@ -1,6 +1,7 @@
 <?php
 	session_start();
 	$id=$_SESSION["id"];
+	$cardno= $_SESSION["cardno"];
 	//logout시
 	if($_POST["logout"]=="LOGOUT" || !$id) {
 		$message="logout";
@@ -17,16 +18,17 @@
 ?>
 <html>
 	<head>
-		<title> Welcome, <?php echo $id ?>!</title> 
+		<title> Welcome, <? echo $id ?>!</title> 
 		<meta charset=UTF-8>
 		<link rel="stylesheet" type="text/css" href="style.css"/>
 	</head>
 	<body>
 		<div id="container">
-			<div id="header"><?php	include "title.php"; ?></div>
+			<div id="header"><?	include "title.php"; ?></div>
 			<div id="sidemenu">
-				<?php 
+				<? 
 					if($id=="admin") include "menu_admin.html";
+					else if($cardno=="bus") include "menu_company.html";
 					else include "menu_user.html";
 				?>
 			</div>

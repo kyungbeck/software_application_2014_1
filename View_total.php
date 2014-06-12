@@ -1,6 +1,4 @@
 <?php
-	session_start();
-	$id=$_SESSION["id"];
 	//$mysqli=mysqli_connect("localhost", "ser","0000","swproject");
 	$mysqli=mysqli_connect("54.178.195.175", "parkjun", "qqqq", "software_application_2014_1");
 	if(mysqli_connect_errno()) { //mysql 연결 실패
@@ -8,10 +6,10 @@
 		exit();
 	}
 	//$message="<p><strong>search result</strong></p>";
-	$table="busline_info";	
+	$table="transactional_information";	
 	//mysql 연결 성공
-	$Sbuscompany=$_POST["buscompany"];	
-	$Sbusline=$_POST["busline"];
+
+	$Scardno=$_POST["cardno"];
 	$check=$_POST["check"]; //check if 처음 else again
 
 	//$message="<p>".$search."</p>";
@@ -21,9 +19,11 @@
 	else {
 		//검색을 한 경우 검색어가 포함된 경우만 출력한다.
 		$message="<p><strong>search result</strong></p>";	
-		$searchsql="SELECT  company, busline FROM ".$table." WHERE company LIKE '%".$Sbuscompany."%' AND busline LIKE '%".$Sbusline."%'";
-		$searchsql.=" ORDER BY company, busline";
-		
+		$searchsql="select cardno, sum(changemoney) from transactional_information";
+		if($Scardno) {
+			$searchsql.=" WHERE cardno='".$Scardno."'";
+		}
+		$searchsql.=" GROUP BY cardno";
 		$searchres=mysqli_query($mysqli, $searchsql) or die(mysqli_error($mysqli));
 		$numres=mysqli_num_rows($searchres);
 		if($numres==0) {
@@ -32,12 +32,11 @@
 		}
 		else {
 			$message.="<table>";
-		$message.="<tr><td>*회사명</td><td>*버스노선번호</td></tr>";
+			$message.="<tr><td>*card No</td><td>*누적금액</td></tr>";
 			while($useinfo=mysqli_fetch_array($searchres)) {
-				$buscompany=stripslashes($useinfo['company']);
-				$busline=stripslashes($useinfo['busline']);
-				
-				$message.="<tr align=right><td>".$buscompany."</td><td>".$busline."</td></tr>";
+				$cardno=stripslashes($useinfo['cardno']);
+				$summoney = stripslashes($useinfo['sum(changemoney)']);
+				$message.="<tr align=right><td>".$cardno."</td><td>".$summoney."</td></tr>";
 			}
 			$message.="</table>";
 			mysqli_free_result($searchres);
@@ -48,31 +47,25 @@
 ?>
 <html>
 	<head>
-		<link type="text/css" rel="stylesheet" href="style.css">	
+		
 		<title>
 			
 		</title>
+		<link type="text/css" rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		버스 사업자별 노선 조회 <hr>
-		<form name="search11" action="View_busline.php" method="POST">
+		합산 금액 조회 <hr>
+		<form name="search11" action="View_total.php" method="POST">
 			<p>
 				<table>
+					
 					<tr>
 						<td>
-							<strong>Bus Company</strong>
-							<input type="text" name="buscompany" value="<?php echo $Sbuscompany; ?>"/>
+							<strong>Card Number</strong>
+							<input type="text" name="cardno" value="<?php echo $Scardno; ?>"/>
 						</td>
-					</tr>
-					<tr> 
-						<td>
-							<strong>Bus Line</strong>
-							<input type="text" name="busline" value="<?php echo $Sbusline; ?>"/>
-						</td>
-					</tr>
-					<tr>
-						<td><input type="hidden" name="check" value=1/></td>
-						<td align="right">
+						<td align="right" >
+							<input type="hidden" name="check" value=1/>
 							<input class="button" type="submit" value="SEARCH!"/>
 						</td>
 					</tr>

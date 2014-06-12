@@ -16,6 +16,14 @@
 	$Sbusno=$_POST["busno"];
 	$Sbusstop=$_POST["busstop"];
 	$check=$_POST["check"]; //check if 처음 else again
+	
+	$sumsql = "select sum(changemoney) from transactional_information where cardno='".$Scardno."' GROUP BY cardno";
+	$sumres=mysqli_query($mysqli, $sumsql) or die(mysqli_error($mysqli));
+	$suminfo=mysqli_fetch_array($sumres);
+	$moneysum=$suminfo["sum(changemoney)"];
+	$message="누적 사용 금액: "."$moneysum"."원<br>";
+	
+
 
 	//$message="<p>".$search."</p>";
 	if($check!=1) {
@@ -23,7 +31,7 @@
 	}
 	else {
 		//검색을 한 경우 검색어가 포함된 경우만 출력한다.
-		$message="<p><strong>search result</strong></p>";	
+		$message.="<p><strong>search result</strong></p>";	
 		$searchsql="SELECT no, cardno, cardtype, persontype, changemoney, ridetagtime, offtagtime, personnumber, ridebusstop, offbusstop, busline, transnumber FROM ".$table." WHERE cardno='".$Scardno."' AND busline LIKE '%".$Sbusno."%'";
 		//특수 검색 시간과 정류장
 		if($frdt && $todt) {

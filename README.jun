@@ -1,0 +1,12 @@
+지금까지 제가 만든거의 흐름을 정리해보자면
+
+login.html 로그인 담당 페이지
+login.php login.html에서 준 자료로 적절한판단을 함
+
+adduser.html 회원 가입 혹은 등록 페이지
+adduser.php
+
+
+이때부터는 php랑 html한번에 하는법을 알게됨...
+View_card.php 카드 보는 페이지
+
