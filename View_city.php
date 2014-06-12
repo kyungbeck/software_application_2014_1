@@ -6,14 +6,14 @@
 		$message='<p>DB connect error</p>';	
 		exit();
 	}
-	mysqli_query($mysqli, 'set names utf8');	
-//$message="<p><strong>search result</strong></p>";
-	$table="transactional_information";	
+	mysqli_query($mysqli, 'set names utf8');
+	//$message="<p><strong>search result</strong></p>";
+	//////$table="transactional_information";	
 	//mysql 연결 성공
 	
 	$frdt=$_POST["frdt"];
 	$todt=$_POST["todt"];
-	$Sbusno=$_POST["busno"];
+	$busco=$_POST["busco"];
 	$frdt2=$frdt."000000";
 	$todt2=$todt."235959";
 	$check=$_POST["check"]; //check if 처음 else again
@@ -30,7 +30,7 @@
 		$Scompany=stripslashes($cominfo['name']); 
 
 		$message="<p><strong>search result</strong></p>";	
-		$searchsql="SELECT B.company, SUM(changemoney) FROM transactional_information as A, busline_info as B WHERE A.busline = B.busline AND B.company='".$Scompany."'";
+		$searchsql="SELECT company, SUM(subsidy) FROM city WHERE company like '%".$busco."%'";
 		//특수 검색 시간과 정류장
 		if($frdt && $todt) {
 			if($frdt2>$todt2) {
@@ -52,7 +52,7 @@
 			$searchsql.=" AND offtagtime<='".$todt2."'";
 		}
 	
-		$searchsql.=" GROUP BY B.company";
+		$searchsql.=" GROUP BY company";
 		
 		$searchres=mysqli_query($mysqli, $searchsql) or die(mysqli_error($mysqli));
 		$numres=mysqli_num_rows($searchres);
@@ -62,10 +62,10 @@
 		}
 		else {
 			$message.="<table>";
-		$message.="<tr><td>*COMPANY</td><td>*매출</td></tr>";
+		$message.="<tr><td>*COMPANY</td><td>*보조금액</td></tr>";
 			while($useinfo=mysqli_fetch_array($searchres)) {
 				$company=stripslashes($useinfo['company']);
-				$money=stripslashes($useinfo['SUM(changemoney)']);
+				$money=stripslashes($useinfo['SUM(subsidy)']);
 				$message.="<tr align=right><td>".$company."</td><td>".$money."</td></tr>";
 			}
 			$message.="</table>";
@@ -84,8 +84,8 @@
 		<link type="text/css" rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		매출 조회 <hr>
-		<form name="search11" action="View_buscompany.php" method="POST">
+		사업자별 보조금 조회 <hr>
+		<form name="search11" action="View_city.php" method="POST">
 			<p>
 				<table>
 					<tr>
@@ -101,8 +101,8 @@
 
 					<tr>	
 						<td>
-							<strong>Bus Line</strong>
-							<input type="text" name="busno" value="<?php echo $Sbusno; ?>"/>
+							<strong>BusCompany</strong>
+							<input type="text" name="busco" value="<?php echo $busco; ?>"/>
 						</td>
 						
 						<td align="right" >

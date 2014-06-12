@@ -17,6 +17,14 @@
 					<td width='200'></td>
 					<td><h5>GANG TEAM</h5></td>	";
 	}
+	else if($cardno=="city") {
+		$message.="
+			    <tr>
+		          <td><h3 id='status'>connecting with SEOUL CITY</h3> </td>
+		          <td width='200'></td>
+		          <td><h5>GANG TEAM</h5></td> ";
+	       }
+	  
 	else { 
 		$message.="<tr>
 					<td><h3 id='status'>connecting with id: ".$id." and card No.: ".$cardno." </h3> </td>

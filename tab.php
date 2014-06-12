@@ -29,6 +29,7 @@
 				<?php
 					if($id=="admin") include "menu_admin.html";
 					else if($cardno=="bus") include "menu_company.html";
+					else if($cardno=="city") include "menu_city.html";
 					else include "menu_user.html";
 				?>
 			</div>
