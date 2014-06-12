@@ -99,6 +99,23 @@ public class calculate {
 						System.out.println("X");
 					else System.out.println("O");
 
+					if (fee != 0)
+					{
+						try {
+							Connection con = null;
+							con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "kimtaehoon", "qqqq");
+							java.sql.Statement st = null;
+							st = con.createStatement();
+							if (isPrepay)
+								st.execute("UPDATE member SET money = money - " + fee + " WHERE cardno = '" + cardID + "';");
+							else
+								st.execute("UPDATE member SET money = money + " + fee + " WHERE cardno = '" + cardID + "';");											
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+
 					transactionHeadNode tempH = new transactionHeadNode(cardID, isPrepay, 0, personType, personNum);
 					transactionUnitNode tempU = new transactionUnitNode(changeFee, taggingDateTime, busstop, busline, 0);
 					tempH.max_basic_fee = basic_fee;
@@ -128,6 +145,23 @@ public class calculate {
 							if (changeFee != fee)
 								System.out.println("X");
 							else System.out.println("O");
+
+							if (fee != 0)
+							{
+								try {
+									Connection con = null;
+									con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "kimtaehoon", "qqqq");
+									java.sql.Statement st = null;
+									st = con.createStatement();
+									if (isPrepay)
+										st.execute("UPDATE member SET money = money - " + fee + " WHERE cardno = '" + cardID + "';");
+									else
+										st.execute("UPDATE member SET money = money + " + fee + " WHERE cardno = '" + cardID + "';");											
+								} catch (SQLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
 
 							transactionHeadNode tempH = new transactionHeadNode(cardID, isPrepay, 0, personType, personNum);
 							transactionUnitNode tempU = new transactionUnitNode(changeFee, taggingDateTime, busstop, busline, 0);
@@ -160,6 +194,23 @@ public class calculate {
 							if (changeFee != fee)
 								System.out.println("X");
 							else System.out.println("O");
+
+							if (fee != 0)
+							{
+								try {
+									Connection con = null;
+									con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "kimtaehoon", "qqqq");
+									java.sql.Statement st = null;
+									st = con.createStatement();
+									if (isPrepay)
+										st.execute("UPDATE member SET money = money - " + fee + " WHERE cardno = '" + cardID + "';");
+									else
+										st.execute("UPDATE member SET money = money + " + fee + " WHERE cardno = '" + cardID + "';");											
+								} catch (SQLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
 
 							t.sum_basic_fee += basic_fee;
 							t.total_fee += fee;
@@ -207,12 +258,25 @@ public class calculate {
 							t.total_fee += fee;
 
 							if (changeFee != fee)
-							{
 								System.out.println("X");
-								System.out.println(changeFee);
-								System.out.println(fee);
-							}
 							else System.out.println("O");
+
+							if (fee != 0)
+							{
+								try {
+									Connection con = null;
+									con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "kimtaehoon", "qqqq");
+									java.sql.Statement st = null;
+									st = con.createStatement();
+									if (isPrepay)
+										st.execute("UPDATE member SET money = money - " + fee + " WHERE cardno = '" + cardID + "';");
+									else
+										st.execute("UPDATE member SET money = money + " + fee + " WHERE cardno = '" + cardID + "';");											
+								} catch (SQLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
 
 							t.unitNode.offTaggingDateTime = taggingDateTime;
 							t.unitNode.offBusstop = busstop;
@@ -233,6 +297,23 @@ public class calculate {
 							if (changeFee != fee)
 								System.out.println("X");
 							else System.out.println("O");
+
+							if (fee != 0)
+							{
+								try {
+									Connection con = null;
+									con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "kimtaehoon", "qqqq");
+									java.sql.Statement st = null;
+									st = con.createStatement();
+									if (isPrepay)
+										st.execute("UPDATE member SET money = money - " + fee + " WHERE cardno = '" + cardID + "';");
+									else
+										st.execute("UPDATE member SET money = money + " + fee + " WHERE cardno = '" + cardID + "';");											
+								} catch (SQLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
 
 							transactionHeadNode tempH = new transactionHeadNode(cardID, isPrepay, 0, personType, personNum);
 							transactionUnitNode tempU = new transactionUnitNode(changeFee, taggingDateTime, busstop, busline, 0);
@@ -287,7 +368,7 @@ public class calculate {
 					Timestamp pivotTime = new Timestamp(0);				
 					long p = nowtime.getTime() - (1000 * 60 * 20);
 					pivotTime.setTime(p);
-					
+
 					boolean is12oclock = false;
 					boolean expired = t.isExpired || t.unitNode.offTaggingDateTime.before(pivotTime);
 
@@ -296,7 +377,7 @@ public class calculate {
 					String sTime = sdf.format(dTime);
 					if (sTime.compareTo("235700") < 0 || sTime.compareTo("000300") > 0)
 						is12oclock = true;					
-					
+
 					if (expired || is12oclock)
 					{	// 만료된 거래노드 정산
 						int sum_basic_fee = t.sum_basic_fee;
@@ -331,6 +412,12 @@ public class calculate {
 							System.out.print(bus + ": ");
 							System.out.println(feeval + "원");
 							st.execute("INSERT INTO company_calcul (company, busline, calculated) values ((SELECT company FROM busline_info WHERE busline = '" + bus + "'), '" + bus + "', " + feeval + ");");
+
+							if (expired)
+							{
+								int subsidy = u.basicFee - feeval;
+								st.execute("insert into city values ((select company from busline_info where busline = '" + bus + "'), '" + bus + "', " + subsidy + ", '" + u.offTaggingDateTime + "');");
+							}
 
 							u = u.nextBoard;
 						}
@@ -427,7 +514,7 @@ public class calculate {
 	{	
 		while (true)
 		{	
-		//	long fiveMinBefore = System.currentTimeMillis() + (1000 * 60 * 5);
+			//	long fiveMinBefore = System.currentTimeMillis() + (1000 * 60 * 5);
 			try 
 			{
 				Connection con = null;
@@ -435,13 +522,13 @@ public class calculate {
 				java.sql.Statement st = null;
 				ResultSet rs = null;
 				st = con.createStatement();
-				
+
 				st.execute("SELECT * FROM time;");
 				rs = st.getResultSet();
 				Timestamp now = new Timestamp(0);
 				while (rs.next())
 					now = rs.getTimestamp(1);
-				
+
 				st.execute("SELECT * FROM table_main;");
 				rs = st.getResultSet();
 
@@ -455,7 +542,6 @@ public class calculate {
 				String busline;
 				int transCount;
 
-				//		System.out.println("<정산 재작업(?)>");
 				while (rs.next()) {
 					cardID = rs.getString(2);
 					if (rs.getInt(3) == 1)
@@ -503,15 +589,15 @@ public class calculate {
 				System.out.println("---------------------------------------------------");
 
 				tSet.Cal(now);
-				
+
 				String query = "DELETE FROM table_main;";
 				st.execute(query);
 
-		//		while(true)
-		//		{
-		//			if (System.currentTimeMillis() > fiveMinBefore)
-		//				break;
-		//		}
+				//		while(true)
+				//		{
+				//			if (System.currentTimeMillis() > fiveMinBefore)
+				//				break;
+				//		}
 
 			} catch (SQLException sqex) {
 				System.out.println("SQLException: " + sqex.getMessage());
