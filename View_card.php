@@ -23,7 +23,7 @@
 		if($numres==0) {
 			$message.="<p>There is no search result!</p>";
 	?>		<script >alert("nosearch"); </script>
-	<?	}
+	<?php	}
 		else {
 			$message.="<table>";
 			$message.="<tr><td>*card No</td><td>*id</td><td>*name</td><td>잔액or월 사용금액</td></tr>";
