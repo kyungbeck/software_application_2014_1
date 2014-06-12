@@ -2,6 +2,8 @@
   $id=$_POST[id];
   $passwd=$_POST[passwd];
   if ( strlen($id) >= 11 || strlen(passwd) >= 9 ) {
+	  echo "Id length: " . strlen($id) . " ";
+	  echo "Passwd length: ". strlen(passwd) . " ";
 	  echo "Input string is too long.";
 	  exit();
   }
