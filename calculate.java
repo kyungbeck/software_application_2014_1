@@ -1,5 +1,10 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class calculate {
 	public static class transactionHeadNode
@@ -21,6 +26,9 @@ public class calculate {
 
 		public boolean isExpired;
 
+		public boolean isTransPossible_UntilNextDay;
+		public ArrayList<Integer> CalYesterDay;
+
 		public transactionHeadNode() {}
 
 		public transactionHeadNode(String cardID, boolean isPrepay, int transCount, int personType, int personNum)
@@ -36,6 +44,8 @@ public class calculate {
 			this.sum_basic_fee = 0;
 			this.total_dist = 0;
 			this.isExpired = false;
+			this.isTransPossible_UntilNextDay = false;
+			this.CalYesterDay = new ArrayList<Integer>();
 		}
 	}
 
@@ -184,7 +194,10 @@ public class calculate {
 								fee = 0;
 							else
 							{
-								int fee_by_dist = ((((int)(t.total_dist/1000) - 12) / 5) + 1) * 100 * personNum + t.max_basic_fee;
+								int fee_by_dist;
+								if (t.total_dist > 12000)
+									fee_by_dist = ((((int)(t.total_dist/1000) - 12) / 5) + 1) * 100 * personNum + t.max_basic_fee;
+								else fee_by_dist = t.max_basic_fee;
 								if (fee_by_dist > t.sum_basic_fee)
 									fee = t.sum_basic_fee - t.total_fee;
 								else
@@ -194,7 +207,11 @@ public class calculate {
 							t.total_fee += fee;
 
 							if (changeFee != fee)
+							{
 								System.out.println("X");
+								System.out.println(changeFee);
+								System.out.println(fee);
+							}
 							else System.out.println("O");
 
 							t.unitNode.offTaggingDateTime = taggingDateTime;
@@ -249,7 +266,7 @@ public class calculate {
 			}
 		}
 
-		public void Cal()
+		public void Cal(Timestamp nowtime)
 		{
 			transactionHeadNode t = this.head;
 
@@ -267,17 +284,26 @@ public class calculate {
 					if (t == null)
 						break;
 
-					Timestamp pivotTime = new Timestamp(0);
-					long p = System.currentTimeMillis() - (1000 * 60 * 20);
+					Timestamp pivotTime = new Timestamp(0);				
+					long p = nowtime.getTime() - (1000 * 60 * 20);
 					pivotTime.setTime(p);
-					if (t.isExpired == true || t.unitNode.offTaggingDateTime.before(pivotTime))
+					
+					boolean is12oclock = false;
+					boolean expired = t.isExpired || t.unitNode.offTaggingDateTime.before(pivotTime);
+
+					SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
+					Date dTime = new Date();
+					String sTime = sdf.format(dTime);
+					if (sTime.compareTo("235700") < 0 || sTime.compareTo("000300") > 0)
+						is12oclock = true;					
+					
+					if (expired || is12oclock)
 					{	// 만료된 거래노드 정산
 						int sum_basic_fee = t.sum_basic_fee;
 						int total_fee = t.total_fee;
 						int sum = 0;
 						transactionUnitNode u = t.unitNode;
-						
-						System.out.println();
+
 						while (true)
 						{
 							if (u == null)
@@ -293,17 +319,32 @@ public class calculate {
 								sum += feeval;
 							}
 
+							if (expired && t.isTransPossible_UntilNextDay)
+							{
+								if (t.CalYesterDay.size() > u.transCount)
+									feeval -= t.CalYesterDay.remove(0);
+							}
+
+							else if (is12oclock)
+								t.CalYesterDay.add(feeval);
+
 							System.out.print(bus + ": ");
 							System.out.println(feeval + "원");
 							st.execute("INSERT INTO company_calcul (company, busline, calculated) values ((SELECT company FROM busline_info WHERE busline = '" + bus + "'), '" + bus + "', " + feeval + ");");
 
 							u = u.nextBoard;
 						}
-						tempT.nextCard = tempT.nextCard.nextCard;
-						t = tempT;
+
+						if (expired)
+						{
+							tempT.nextCard = tempT.nextCard.nextCard;
+							t = tempT;
+						}
+						else
+							t.isTransPossible_UntilNextDay = true;
 					}
 				}
-				
+
 				System.out.println("inserting into 'company_calcul' finished");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -383,81 +424,116 @@ public class calculate {
 	static ArrayList<transactionHeadNode> NodetoCal = new ArrayList<transactionHeadNode>();
 
 	public static void main(String[] args)
-	{
-		try 
-		{
-			Connection con = null;
-			con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "kimtaehoon", "qqqq");
-			java.sql.Statement st = null;
-			ResultSet rs = null;
-			st = con.createStatement();
-
-			st.execute("SELECT * FROM table_main;");
-			rs = st.getResultSet();
-
-			String cardID;
-			boolean isPrepay; // 1:prepay, 2:hoobool
-			int personType; // 1:adult, 2:adolescent, 3:child
-			int changeFee;
-			Timestamp taggingDateTime;
-			int personNum;
-			String busstop;
-			String busline;
-			int transCount;
-
-			//		System.out.println("<정산 재작업(?)>");
-			while (rs.next()) {
-				cardID = rs.getString(2);
-				if (rs.getInt(3) == 1)
-					isPrepay = true;
-				else isPrepay = false;
-				personType = rs.getInt(4);
-				changeFee = rs.getInt(5);
-				taggingDateTime = rs.getTimestamp(6);
-				personNum = rs.getInt(7);
-				busstop = rs.getString(8);
-				busline = rs.getString(9);
-				transCount = rs.getInt(10);
-				tSet.put(cardID, isPrepay, transCount, changeFee, taggingDateTime, personType, personNum, busstop, busline);
-			}
-
-			int i = 0;
-			int cardType; // 1:prepay, 2:hoobool
-			Timestamp onTime;
-			Timestamp offTime;
-			String onStop;
-			String offStop;
-
-			while (!NodetoPrint.isEmpty())
+	{	
+		while (true)
+		{	
+		//	long fiveMinBefore = System.currentTimeMillis() + (1000 * 60 * 5);
+			try 
 			{
-				transactionUnitNode t = NodetoPrint.remove(i);
-				transactionHeadNode h = t.headNode;
+				Connection con = null;
+				con = DriverManager.getConnection("jdbc:mysql://54.178.195.175/software_application_2014_1", "kimtaehoon", "qqqq");
+				java.sql.Statement st = null;
+				ResultSet rs = null;
+				st = con.createStatement();
+				
+				st.execute("SELECT * FROM time;");
+				rs = st.getResultSet();
+				Timestamp now = new Timestamp(0);
+				while (rs.next())
+					now = rs.getTimestamp(1);
+				
+				st.execute("SELECT * FROM table_main;");
+				rs = st.getResultSet();
 
-				cardID = h.cardID;
-				if (h.isPrepay)
-					cardType = 1;
-				else cardType = 2;
-				personType = h.personType;
-				changeFee = t.changeFee;
-				onTime = t.onTaggingDateTime;
-				offTime = t.offTaggingDateTime;
-				personNum = h.personNum;
-				onStop = t.onBusstop;
-				offStop = t.offBusstop;
-				busline = t.busline;
-				transCount = t.transCount; // h.transCount (X)
+				String cardID;
+				boolean isPrepay; // 1:prepay, 2:hoobool
+				int personType; // 1:adult, 2:adolescent, 3:child
+				int changeFee;
+				Timestamp taggingDateTime;
+				int personNum;
+				String busstop;
+				String busline;
+				int transCount;
 
-				String query = "INSERT INTO transactional_information (cardno, cardtype, persontype, changemoney, ridetagtime, offtagtime, personnumber, ridebusstop, offbusstop, busline, transnumber) values ('" + cardID + "', " + cardType + ", " + personType + ", " + changeFee + ", '" + onTime + "', '" + offTime + "', " + personNum + ", '" + onStop + "', '" + offStop + "', '" + busline + "', " + transCount + ");";
+				//		System.out.println("<정산 재작업(?)>");
+				while (rs.next()) {
+					cardID = rs.getString(2);
+					if (rs.getInt(3) == 1)
+						isPrepay = true;
+					else isPrepay = false;
+					personType = rs.getInt(4);
+					changeFee = rs.getInt(5);
+					taggingDateTime = rs.getTimestamp(6);
+					personNum = rs.getInt(7);
+					busstop = rs.getString(8);
+					busline = rs.getString(9);
+					transCount = rs.getInt(10);
+					tSet.put(cardID, isPrepay, transCount, changeFee, taggingDateTime, personType, personNum, busstop, busline);
+				}
+
+				int cardType; // 1:prepay, 2:hoobool
+				Timestamp onTime;
+				Timestamp offTime;
+				String onStop;
+				String offStop;
+
+				while (!NodetoPrint.isEmpty())
+				{
+					transactionUnitNode t = NodetoPrint.remove(0);
+					transactionHeadNode h = t.headNode;
+
+					cardID = h.cardID;
+					if (h.isPrepay)
+						cardType = 1;
+					else cardType = 2;
+					personType = h.personType;
+					changeFee = t.changeFee;
+					onTime = t.onTaggingDateTime;
+					offTime = t.offTaggingDateTime;
+					personNum = h.personNum;
+					onStop = t.onBusstop;
+					offStop = t.offBusstop;
+					busline = t.busline;
+					transCount = t.transCount; // h.transCount (X)
+
+					String query = "INSERT INTO transactional_information (cardno, cardtype, persontype, changemoney, ridetagtime, offtagtime, personnumber, ridebusstop, offbusstop, busline, transnumber) values ('" + cardID + "', " + cardType + ", " + personType + ", " + changeFee + ", '" + onTime + "', '" + offTime + "', " + personNum + ", '" + onStop + "', '" + offStop + "', '" + busline + "', " + transCount + ");";
+					st.execute(query);
+				}
+				System.out.println("inserting into 'transactional_information' finished");
+				System.out.println("---------------------------------------------------");
+
+				tSet.Cal(now);
+				
+				String query = "DELETE FROM table_main;";
 				st.execute(query);
-			}
-			System.out.println("inserting into 'transactional_information' finished");
-			System.out.println("---------------------------------------------------");
-			
-			tSet.Cal();
 
-		} catch (SQLException sqex) {
-			System.out.println("SQLException: " + sqex.getMessage());
-			System.out.println("SQLState: " + sqex.getSQLState());
+		//		while(true)
+		//		{
+		//			if (System.currentTimeMillis() > fiveMinBefore)
+		//				break;
+		//		}
+
+			} catch (SQLException sqex) {
+				System.out.println("SQLException: " + sqex.getMessage());
+				System.out.println("SQLState: " + sqex.getSQLState());
+			}
+
+			BufferedReader brin = new BufferedReader(new InputStreamReader(System.in));
+			while (true)
+			{
+				try
+				{
+					String input = brin.readLine();
+					if (input.compareTo("") == 0)
+						break;
+					else if (input.compareTo("quit") == 0)
+						return;
+				}
+				catch (IOException e)
+				{
+					System.out.println("입력이 잘못되었습니다. 오류 : " + e.toString());
+				}
+			}
 		}
 	}
 }
