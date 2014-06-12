@@ -1,7 +1,7 @@
 <?php
   $id=$_POST[id];
   $passwd=$_POST[passwd];
-  if ( strlen($id) >= 20 || strlen(passwd) >= 20 ) {
+  if ( strlen($id) >= 11 || strlen(passwd) >= 9 ) {
 	  echo "Input string is too long.";
 	  exit();
   }
