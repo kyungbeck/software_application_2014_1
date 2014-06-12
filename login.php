@@ -1,6 +1,11 @@
 <?php
   $id=$_POST[id];
   $passwd=$_POST[passwd];
+  if ( strlen($id) >= 20 || strlen(passwd) >= 20 ) {
+	  echo "Input string is too long.";
+	  exit();
+  }
+	
   if($_POST["logout"]) {
 	unset($_SESSION["id"]);
 	unset($_SESSION["cardno"]);
