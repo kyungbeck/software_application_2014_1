@@ -6,7 +6,7 @@
 		exit();
 	}
 	$message="";
-	
+	mysqli_query($mysqli, 'set names=utf8');	
 	//mysql 연결 성공
 	$search=$_POST["word"];	
 	$check=$_POST["check"];

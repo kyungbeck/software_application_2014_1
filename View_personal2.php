@@ -5,7 +5,7 @@
 		$message='<p>DB connect error</p>';	
 		exit();
 	}
-	
+	mysqli_query($mysqli, 'set names=utf8');	
 	$message="<h2><p><strong>회원 정보 조회 및 변경</strong></p></h2>";
 	//mysql 연결 성공
 	$check=$_POST["check"];

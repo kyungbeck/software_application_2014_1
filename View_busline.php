@@ -7,6 +7,7 @@
 		$message='<p>DB connect error</p>';	
 		exit();
 	}
+	mysqli_query($mysqli, 'set names=utf8');
 	//$message="<p><strong>search result</strong></p>";
 	$table="busline_info";	
 	//mysql 연결 성공

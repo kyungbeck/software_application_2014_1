@@ -5,6 +5,7 @@
 		$message='<p>DB connect error</p>';	
 		exit();
 	}
+	mysqli_query($mysqli, 'set names utf8');
 	//$message="<p><strong>search result</strong></p>";
 	$table="transactional_information";	
 	//mysql 연결 성공
