@@ -37,13 +37,13 @@
 				echo $message="time error";
 				exit();
 			}
-		    $searchsql2.=" AND (offtagtime BETWEEN '".$frdt."' AND '".$todt."')";
+		    $searchsql2.=" AND (time BETWEEN '".$frdt."' AND '".$todt."')";
 		}
 	    else if($frdt) {
-			$searchsql2.=" AND offtagtime>='".$frdt."'";
+			$searchsql2.=" AND tagtime>='".$frdt."'";
 	    }
 	    else if($todt) {
-	        $searhsql2.=" AND offtagtime<='".$todt."'";
+	        $searhsql2.=" AND tagtime<='".$todt."'";
 		}
 		$searchsql2.=" GROUP BY company";
 		$searchres2=mysqli_query($mysqli, $searchsql2) or die(mysqli_error($mysqli));
@@ -75,17 +75,17 @@
 			}
 			//사이
 			//echo $message="1";
-			$searchsql.=" AND (offtagtime BETWEEN '".$frdt2."' AND '".$todt2."')";
+			$searchsql.=" AND (time BETWEEN '".$frdt2."' AND '".$todt2."')";
 		}
 		else if($frdt) {
 			//이시간이후 탑승기록에 대해 모두 검색
 			//echo $message="2";
-			$searchsql.=" AND offtagtime>='".$frdt2."'";
+			$searchsql.=" AND tagtime>='".$frdt2."'";
 		}
 		else if($todt) {
 			//이시간이전 탑승기록에 대해 모두 검색
 			//echo $message="3";
-			$searchsql.=" AND offtagtime<='".$todt2."'";
+			$searchsql.=" AND tagtime<='".$todt2."'";
 		}
 	
 		//$searchsql.=" GROUP BY B.company";

@@ -5,7 +5,7 @@
 		$message='<p>DB connect error</p>';	
 		exit();
 	}
-	$message="";
+	//$message="";
 	mysqli_query($mysqli, 'set names=utf8');	
 	//mysql 연결 성공
 	$search=$_POST["word"];	
@@ -25,16 +25,16 @@
 		$searchsql2="SELECT company, sum(calculated) FROM company_calcul WHERE busline LIKE '%".$search."%' AND company LIKE '%".$com."%'";
         if($frdt && $todt) {
 			if($frdt>$todt) {
-				echo $message="time error";
+				$message="time error";
 				exit();
 			}
-		    $searchsql2.=" AND (offtagtime BETWEEN '".$frdt."' AND '".$todt."')";
+		    $searchsql2.=" AND (time BETWEEN '".$frdt."' AND '".$todt."')";
 		}
 	    else if($frdt) {
-			$searchsql2.=" AND offtagtime>='".$frdt."'";
+			$searchsql2.=" AND time>='".$frdt."'";
 	    }
 	    else if($todt) {
-	        $searhsql2.=" AND offtagtime<='".$todt."'";
+	        $searhsql2.=" AND time<='".$todt."'";
 		}
 		$searchsql2.=" GROUP BY company";
 		$searchres2=mysqli_query($mysqli, $searchsql2) or die(mysqli_error($mysqli));
@@ -59,16 +59,16 @@
 
 		if($frdt && $todt) {
 			if($frdt>$todt) {
-				echo $message="time error";
+				$message="time error";
 				exit();
 			}
-			$searchsql.=" AND (offtagtime BETWEEN '".$frdt."' AND '".$todt."')";
+			$searchsql.=" AND (time BETWEEN '".$frdt."' AND '".$todt."')";
 		}
 		else if($frdt) {
-			$searchsql.=" AND offtagtime>='".$frdt."'";
+			$searchsql.=" AND time>='".$frdt."'";
 		}
 		else if($todt) {
-			$searhsql.=" AND offtagtime<='".$todt."'";
+			$searhsql.=" AND time<='".$todt."'";
 		}
 
 		//$searchsql.=" GROUP BY B.company";
@@ -114,7 +114,7 @@
 						</td>
 						<td>
 							<strong>Time To</strong>
-							<input type="text" name="todt" value="<?php echo $todt; ?> "/>
+							<input type="text" name="todt" value="<?php echo $todt; ?>" />
 						</td>
 					</tr>
 					<tr>
